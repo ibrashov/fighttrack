@@ -1,0 +1,398 @@
+{
+  "info": {
+    "name": "FightTrack API",
+    "_postman_id": "fighttrack-collection-v1",
+    "description": "Complete API collection for the FightTrack platform. Set the `base_url` variable to http://localhost:8000 and the `token` variable after login.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/auth/register/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"fighter1\",\n  \"email\": \"fighter1@example.com\",\n  \"password\": \"pass1234\",\n  \"password_confirm\": \"pass1234\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"token\": \"abc123xyz\",\n  \"user\": {\n    \"id\": 1,\n    \"username\": \"fighter1\",\n    \"email\": \"fighter1@example.com\",\n    \"first_name\": \"\",\n    \"last_name\": \"\",\n    \"profile\": {\n      \"bio\": \"\",\n      \"weight_class\": \"\",\n      \"years_experience\": 0,\n      \"created_at\": \"2024-01-15T10:00:00Z\"\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/auth/login/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"fighter1\",\n  \"password\": \"pass1234\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"token\": \"abc123xyz\",\n  \"user\": {\n    \"id\": 1,\n    \"username\": \"fighter1\",\n    \"email\": \"fighter1@example.com\",\n    \"first_name\": \"\",\n    \"last_name\": \"\",\n    \"profile\": null\n  }\n}"
+            },
+            {
+              "name": "401 Unauthorized",
+              "status": "Unauthorized",
+              "code": 401,
+              "body": "{\n  \"error\": \"Invalid credentials.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": "{{base_url}}/api/auth/logout/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Logged out successfully.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/api/auth/profile/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"username\": \"fighter1\",\n  \"email\": \"fighter1@example.com\",\n  \"first_name\": \"Ali\",\n  \"last_name\": \"Khan\",\n  \"profile\": {\n    \"bio\": \"BJJ Blue Belt, Muay Thai 3 years\",\n    \"weight_class\": \"lightweight\",\n    \"years_experience\": 3,\n    \"created_at\": \"2024-01-15T10:00:00Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": "{{base_url}}/api/auth/profile/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bio\": \"BJJ Blue Belt, Muay Thai 3 years\",\n  \"weight_class\": \"lightweight\",\n  \"years_experience\": 3\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"username\": \"fighter1\",\n  \"profile\": {\n    \"bio\": \"BJJ Blue Belt, Muay Thai 3 years\",\n    \"weight_class\": \"lightweight\",\n    \"years_experience\": 3,\n    \"created_at\": \"2024-01-15T10:00:00Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/api/auth/users/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 2,\n    \"username\": \"fighter2\",\n    \"email\": \"fighter2@example.com\",\n    \"profile\": { \"weight_class\": \"welterweight\", \"years_experience\": 5 }\n  }\n]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gyms",
+      "item": [
+        {
+          "name": "List Gyms",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/gyms/",
+              "query": [{ "key": "city", "value": "Almaty", "disabled": true }]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Nomad Fight Club\",\n    \"address\": \"Abay Ave 10\",\n    \"city\": \"Almaty\",\n    \"country\": \"Kazakhstan\",\n    \"description\": \"Full MMA facility\",\n    \"is_active\": true,\n    \"created_at\": \"2024-01-10T08:00:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Gym",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/api/gyms/1/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"name\": \"Nomad Fight Club\",\n  \"address\": \"Abay Ave 10\",\n  \"city\": \"Almaty\",\n  \"country\": \"Kazakhstan\",\n  \"description\": \"Full MMA facility\",\n  \"is_active\": true,\n  \"created_at\": \"2024-01-10T08:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Gym",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": "{{base_url}}/api/gyms/create/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nomad Fight Club\",\n  \"address\": \"Abay Ave 10\",\n  \"city\": \"Almaty\",\n  \"country\": \"Kazakhstan\",\n  \"description\": \"Full MMA facility with cage and mats\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"name\": \"Nomad Fight Club\",\n  \"address\": \"Abay Ave 10\",\n  \"city\": \"Almaty\",\n  \"country\": \"Kazakhstan\",\n  \"description\": \"Full MMA facility with cage and mats\",\n  \"is_active\": true,\n  \"created_at\": \"2024-01-15T10:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Gym",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": "{{base_url}}/api/gyms/1/edit/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated: Full MMA facility with 2 cages\"\n}"
+            }
+          },
+          "response": [
+            { "name": "200 OK", "code": 200, "body": "{ \"id\": 1, \"name\": \"Nomad Fight Club\", \"description\": \"Updated: Full MMA facility with 2 cages\" }" }
+          ]
+        },
+        {
+          "name": "Delete (Soft) Gym",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/api/gyms/1/edit/"
+          },
+          "response": [{ "name": "204 No Content", "code": 204, "body": "" }]
+        }
+      ]
+    },
+    {
+      "name": "Training Logs",
+      "item": [
+        {
+          "name": "List My Logs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/api/training/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"user\": 1,\n    \"username\": \"fighter1\",\n    \"title\": \"Morning Jab Combos\",\n    \"focus\": \"striking\",\n    \"focus_display\": \"Striking\",\n    \"duration_minutes\": 90,\n    \"intensity\": 4,\n    \"intensity_display\": \"Hard\",\n    \"notes\": \"Worked the jab-cross-hook combo\",\n    \"date\": \"2024-01-15\",\n    \"created_at\": \"2024-01-15T06:30:00Z\",\n    \"updated_at\": \"2024-01-15T06:30:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Create Training Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": "{{base_url}}/api/training/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Morning Jab Combos\",\n  \"focus\": \"striking\",\n  \"duration_minutes\": 90,\n  \"intensity\": 4,\n  \"notes\": \"Worked the jab-cross-hook combo on pads\",\n  \"date\": \"2024-01-15\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"user\": 1,\n  \"username\": \"fighter1\",\n  \"title\": \"Morning Jab Combos\",\n  \"focus\": \"striking\",\n  \"focus_display\": \"Striking\",\n  \"duration_minutes\": 90,\n  \"intensity\": 4,\n  \"intensity_display\": \"Hard\",\n  \"notes\": \"Worked the jab-cross-hook combo on pads\",\n  \"date\": \"2024-01-15\",\n  \"created_at\": \"2024-01-15T06:30:00Z\",\n  \"updated_at\": \"2024-01-15T06:30:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Training Log",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/api/training/1/"
+          },
+          "response": [{ "name": "200 OK", "code": 200, "body": "{ \"id\": 1, \"title\": \"Morning Jab Combos\" }" }]
+        },
+        {
+          "name": "Update Training Log",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": "{{base_url}}/api/training/1/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Morning Jab Combos – Updated\",\n  \"focus\": \"striking\",\n  \"duration_minutes\": 95,\n  \"intensity\": 4,\n  \"notes\": \"Added uppercut to the combo\",\n  \"date\": \"2024-01-15\"\n}"
+            }
+          },
+          "response": [{ "name": "200 OK", "code": 200, "body": "{ \"id\": 1, \"title\": \"Morning Jab Combos – Updated\" }" }]
+        },
+        {
+          "name": "Delete Training Log",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/api/training/1/"
+          },
+          "response": [{ "name": "204 No Content", "code": 204, "body": "" }]
+        },
+        {
+          "name": "Training Stats",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/api/training/stats/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "code": 200,
+              "body": "{\n  \"total_sessions\": 12,\n  \"total_minutes\": 960,\n  \"total_hours\": 16.0,\n  \"focus_breakdown\": {\n    \"striking\": 5,\n    \"grappling\": 4,\n    \"conditioning\": 3\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sparring",
+      "item": [
+        {
+          "name": "List All My Sparring Requests",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/api/sparring/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"initiator\": 1,\n    \"initiator_username\": \"fighter1\",\n    \"opponent\": 2,\n    \"opponent_username\": \"fighter2\",\n    \"gym\": 1,\n    \"gym_detail\": { \"id\": 1, \"name\": \"Nomad Fight Club\", \"city\": \"Almaty\" },\n    \"proposed_date\": \"2024-01-20\",\n    \"proposed_time\": \"18:00:00\",\n    \"message\": \"Let's keep it technical, no big shots\",\n    \"status\": \"pending\",\n    \"status_display\": \"Pending\",\n    \"created_at\": \"2024-01-15T10:00:00Z\",\n    \"updated_at\": \"2024-01-15T10:00:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Create Sparring Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": "{{base_url}}/api/sparring/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"opponent_id\": 2,\n  \"gym_id\": 1,\n  \"proposed_date\": \"2024-01-20\",\n  \"proposed_time\": \"18:00\",\n  \"message\": \"Let's keep it technical, no big shots\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"initiator\": 1,\n  \"initiator_username\": \"fighter1\",\n  \"opponent\": 2,\n  \"opponent_username\": \"fighter2\",\n  \"status\": \"pending\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Incoming Sparring Requests",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/api/sparring/incoming/"
+          },
+          "response": [
+            { "name": "200 OK", "code": 200, "body": "[ { \"id\": 1, \"initiator_username\": \"fighter1\", \"status\": \"pending\" } ]" }
+          ]
+        },
+        {
+          "name": "Accept / Decline Request",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": "{{base_url}}/api/sparring/1/status/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"accepted\"\n}"
+            }
+          },
+          "response": [
+            { "name": "200 OK", "code": 200, "body": "{ \"id\": 1, \"status\": \"accepted\", \"status_display\": \"Accepted\" }" }
+          ]
+        },
+        {
+          "name": "Cancel Sparring Request",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/api/sparring/1/"
+          },
+          "response": [
+            { "name": "200 OK", "code": 200, "body": "{ \"id\": 1, \"status\": \"cancelled\" }" }
+          ]
+        }
+      ]
+    }
+  ]
+}

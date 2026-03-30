@@ -1,0 +1,1 @@
+var n=["Boxing","MMA","Muay Thai","Kickboxing","Wrestling","BJJ","Judo","Karate","Taekwondo","Sambo","Other"],o=["15 min","30 min","45 min","3 rounds x 2 min","3 rounds x 3 min","5 rounds x 3 min"];export{n as a,o as b};
